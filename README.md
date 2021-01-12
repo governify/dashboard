@@ -3,6 +3,7 @@
 </p>
  
 # Governify Grafana
+[![Node.js CI](https://github.com/governify/dashboard/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/governify/dashboard/actions)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
 Repository with the docker files to build the custom grafana image for Governify Project.
