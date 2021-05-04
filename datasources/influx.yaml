@@ -4,7 +4,7 @@ datasources:
   - name: InfluxDB
     type: influxdb
     access: proxy
-    url: http://influxdb:8086
+    url: $INFLUX_URL
     database: metrics
     version: 1
     editable: true
