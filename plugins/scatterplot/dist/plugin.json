@@ -1,0 +1,34 @@
+{
+  "type": "panel",
+  "name": "scatterplot",
+  "id": "isagroup-scatterplot",
+  "info": {
+    "description": "Scatter plot for Grafana - Governify",
+    "author": {
+      "name": "Alejandro Guerrero",
+      "url": ""
+    },
+    "keywords": [],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/grafana/simple-react-panel"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "1.0.2",
+    "updated": "2020-11-27"
+  },
+  "dependencies": {
+    "grafanaVersion": "7.0.x",
+    "plugins": []
+  }
+}

@@ -28,7 +28,6 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   let points: any = [];
   let pointsNotGrouped: any = [];
 
-  console.log(data)
 
 
   data.series[0].fields[0].values.toArray().forEach((time, index) => { //For 2each data point
@@ -50,7 +49,6 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     );
 
     if (fieldToX && fieldToY && fieldToID) {
-      console.log(fieldToID.values.get(index) + ' ' + options.highlightTeam)
       let colorpoint = fieldToID.values.get(index) === options.highlightTeam ? '#0066ff' : 'rgb(155, 155, 155)';
       point = {
         xValue: fieldToX.values.get(index),
@@ -60,7 +58,6 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
       }
     }
 
-    //console.log(point)
     pointsNotGrouped.push(point);
 
   });
@@ -76,8 +73,6 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
       points.push(point);
     }
   })
-  console.log("final results:")
-  console.log(points)
 
 
 
@@ -94,7 +89,6 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   const yAxis = d3.axisLeft(yScale);
   let limit = d3.line()([[0, 0], [chartWidth, -chartHeight]]);
   let threshold = d3.line()([[0, 0], [chartWidth, -chartHeight * (options.threshold / 100)]]);
-  console.log(limit)
 
   return (
     <div
