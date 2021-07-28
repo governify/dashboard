@@ -10,8 +10,59 @@ on:
     branches: [ main, develop ]
 
 jobs:
+  buildScatterPlot:
+    if: ${{ github.event_name == 'push'}}
+    runs-on: ubuntu-latest
+    container: srclosson/grafana-plugin-ci-alpine:latest
+    defaults:
+      run:
+        working-directory: ./plugins/scatterplot
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: restore node_modules
+        uses: actions/cache@v2
+        with:
+          path: ~/${{ yarn-cache-dir-path.outputs.dir }}
+          key: build-cache-${{ .Environment.CACHE_VERSION }}-${{ checksum "yarn.lock" }}
+
+      - name: Install dependencies
+        run: |
+          mkdir ci
+          [ -f ~/project/node_modules/.bin/grafana-toolkit ] || yarn install --frozen-lockfile
+
+      - name: save node_modules
+        uses: actions/cache@v2
+        with:
+          path: ~/project/node_modules
+          key: build-cache-${{ .Environment.CACHE_VERSION }}-${{ checksum "yarn.lock" }}
+
+      - name: Build and test frontend
+        run: ./node_modules/.bin/grafana-toolkit plugin:ci-build
+
+      - name: Move results to ci folder
+        run: ./node_modules/.bin/grafana-toolkit plugin:ci-build --finish
+
+      - name: Package distribution
+        run: ./node_modules/.bin/grafana-toolkit plugin:ci-package
+
+      - name: Persist to workspace
+        uses: actions/upload-artifact@v2
+        with:
+          name: ci-build
+          path: |
+            ci/jobs/package
+            ci/packages
+            ci/dist
+            ci/grafana-test-env
+
   buildProd:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push'}}
+    needs: buildScatterPlot
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -33,6 +84,7 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}  
   buildTest:
     if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
+    needs: buildScatterPlot
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
