@@ -80,7 +80,7 @@ jobs:
 
   buildProd:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push'}}
-    needs: buildScatterPlot
+    needs: buildPlugins
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -102,7 +102,7 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}  
   buildTest:
     if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
-    needs: buildScatterPlot
+    needs: buildPlugins
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
