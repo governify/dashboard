@@ -6,34 +6,18 @@ import { stylesFactory } from '@grafana/ui';
 import * as d3 from 'd3';
 import ReactTooltip from 'react-tooltip';
 
-
-
-interface Props extends PanelProps<SimpleOptions> {
-
-}
-
-
-
-
+interface Props extends PanelProps<SimpleOptions> { }
 
 export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
-
-
   const styles = getStyles();
   const margin = { left: 40, top: 30, right: 30, bottom: 35 };
   const chartWidth = width - (margin.left + margin.right);
   const chartHeight = height - (margin.top + margin.bottom);
-
-
   let points: any = [];
   let pointsNotGrouped: any = [];
 
-
-
   data.series[0].fields[0].values.toArray().forEach((time, index) => { //For 2each data point
-
     let point = { xValue: 0, yValue: 0, id: "0", color: '#00cc00' }
-
 
     //Check all data for generating the graph exists
     let fieldToX = data.series[0].fields.find(field =>
@@ -57,13 +41,10 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
         color: colorpoint,
       }
     }
-
     pointsNotGrouped.push(point);
-
   });
 
   pointsNotGrouped.forEach((point: any) => {
-
     let existingPoint = points.find((p: any) => p.id === point.id);
     if (existingPoint) {
       existingPoint.xValue += point.xValue;
@@ -72,13 +53,11 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     else {
       points.push(point);
     }
-  })
-
-
-
+  });
 
   let maxX = Math.max.apply(Math, points.map((p: any) => { return p.xValue; }));
   let maxY = Math.max.apply(Math, points.map((p: any) => { return p.yValue; }));
+
   //The maximum of both axis is the real maximum.
   maxX = maxX > maxY ? maxX : maxY;
   maxY = maxX > maxY ? maxX : maxY;
@@ -121,31 +100,24 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
             points={`0,0
             ${chartWidth}, ${-chartHeight * (options.threshold / 100)}
             ${chartWidth},0`} />
-            
-            <polygon transform={`translate(0, ${chartHeight})`} fill="rgba(150, 150, 150, 0.12)" stroke-width="2"
+
+          <polygon transform={`translate(0, ${chartHeight})`} fill="rgba(150, 150, 150, 0.12)" stroke-width="2"
             points={`0,0
             ${chartWidth}, ${-chartHeight}
             0,${-chartHeight}`} />
 
-        {/* <path transform={`translate(0, ${chartHeight})`} d={limit?.toString()} stroke="green" stroke-width="2" stroke-dasharray="6 4" /> */}
-        
+          {/* <path transform={`translate(0, ${chartHeight})`} d={limit?.toString()} stroke="green" stroke-width="2" stroke-dasharray="6 4" /> */}
+
           <path transform={`translate(0, ${chartHeight})`} d={threshold?.toString()} stroke="rgba(200, 0, 0, 0.3)" stroke-width="1" />
           <g>
             {points.map((point: any) => (
               <circle data-tip={point.id} fill={point.color} cx={xScale(point.xValue)} cy={yScale(point.yValue)} r={5} />
             ))}
           </g>
-
-
-
-
-
         </g>
         <text x={- height / 2} y="6" fill="black" transform={`rotate(270 0,00)`} dominant-baseline="middle" text-anchor="middle">{options.yAxisTitle}</text>
         <text x={width / 2} y={height - 6} fill="black" transform={`translate(0,0)`} dominant-baseline="middle" text-anchor="middle">{options.xAxisTitle}</text>
       </svg>
-
-
     </div>
   );
 };
