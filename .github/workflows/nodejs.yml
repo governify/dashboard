@@ -30,36 +30,15 @@ jobs:
       matrix:
         dir: ${{ fromJson(needs.directories.outputs.dir) }}
     defaults:
-      run:
+      run: # Defaults for all run steps, not uses
         working-directory: ./plugins/${{ matrix.dir }}
     steps:
       - uses: actions/checkout@v2
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: restore node_modules
-        uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install dependencies
+      - name: Install dependencies (yarn)
         run: |
           mkdir ci
-          [ -f ~/project/node_modules/.bin/grafana-toolkit ] || yarn install --frozen-lockfile
-
-      - name: save node_modules
-        uses: actions/cache@v2
-        with:
-          path: ~/project/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          yarn install --frozen-lockfile
 
       - name: Lint fix
         run: yarn format
@@ -76,12 +55,11 @@ jobs:
       - name: Persist to workspace
         uses: actions/upload-artifact@v2
         with:
-          name: ci-build
           path: |
-            ./ci/jobs/package
-            ./ci/packages
-            ./ci/dist
-            ./ci/grafana-test-env
+            ./plugins/${{ matrix.dir }}/ci/jobs/package
+            ./plugins/${{ matrix.dir }}/ci/packages
+            ./plugins/${{ matrix.dir }}/ci/dist
+            ./plugins/${{ matrix.dir }}/ci/grafana-test-env
 
   buildProd:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push'}}
