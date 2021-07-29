@@ -10,13 +10,26 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  buildScatterPlot:
+  directories: # Job that list subdirectories
+    runs-on: ubuntu-latest
+    outputs:
+      dir: ${{ steps.set-dirs.outputs.dir }} # generate output name dir by using inner step output
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-dirs
+        run: echo "::set-output name=dir::$(ls -d */ | jq -R -s -c 'split("\n")[:-1]')"
+
+  buildPlugins: # Loops all directories and builds plugins
     if: ${{ github.event_name == 'push'}}
     runs-on: ubuntu-latest
     container: srclosson/grafana-plugin-ci-alpine:latest
+    needs: [directories]
+    strategy:
+      matrix:
+        dir: ${{ fromJson(needs.directories.outputs.dir) }}
     defaults:
       run:
-        working-directory: ./plugins/scatterplot
+        working-directory: ./plugins/${{ dir }}
     steps:
       - uses: actions/checkout@v2
 
@@ -29,7 +42,9 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: build-cache-${{ .Environment.CACHE_VERSION }}-${{ checksum "yarn.lock" }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         run: |
@@ -40,7 +55,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/project/node_modules
-          key: build-cache-${{ .Environment.CACHE_VERSION }}-${{ checksum "yarn.lock" }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Build and test frontend
         run: ./node_modules/.bin/grafana-toolkit plugin:ci-build
