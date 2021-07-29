@@ -61,8 +61,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Prettier format
+        run: yarn format
+        
       - name: Build and test frontend
-        run: ./node_modules/.bin/grafana-toolkit plugin:ci-build --skipLint
+        run: ./node_modules/.bin/grafana-toolkit plugin:ci-build
 
       - name: Move results to ci folder
         run: ./node_modules/.bin/grafana-toolkit plugin:ci-build --finish
