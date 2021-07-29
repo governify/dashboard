@@ -77,10 +77,6 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     .range([chartHeight, 0]);
   const xAxis = d3.axisBottom(xScale);
   const yAxis = d3.axisLeft(yScale);
-  let limit = d3.line()([
-    [0, 0],
-    [chartWidth, -chartHeight]
-  ]);
   let threshold = d3.line()([
     [0, 0], [chartWidth, -chartHeight * (options.threshold / 100)]
   ]);
