@@ -7,7 +7,7 @@
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch",
-    "format": "prettier --write \"**/*.*\""
+    "format": "prettier --write \"src/*.*\""
   },
   "repository": "github:grafana/simple-react-panel",
   "author": "Alejandro Guerrero",
