@@ -70,9 +70,6 @@ jobs:
       - name: Move results to ci folder
         run: ./node_modules/.bin/grafana-toolkit plugin:ci-build --finish
 
-#      - name: Sign plugin
-#        run: ./node_modules/.bin/grafana-toolkit plugin:sign
-
       - name: Package distribution
         run: ./node_modules/.bin/grafana-toolkit plugin:ci-package
 
@@ -81,10 +78,10 @@ jobs:
         with:
           name: ci-build
           path: |
-            ci/jobs/package
-            ci/packages
-            ci/dist
-            ci/grafana-test-env
+            ./ci/jobs/package
+            ./ci/packages
+            ./ci/dist
+            ./ci/grafana-test-env
 
   buildProd:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push'}}
