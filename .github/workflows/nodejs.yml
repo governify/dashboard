@@ -61,14 +61,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Lint fix
-        run: yarn lint --fix
-
       - name: Build and test frontend
-        run: ./node_modules/.bin/grafana-toolkit plugin:ci-build
+        run: ./node_modules/.bin/grafana-toolkit plugin:ci-build --skipLint
 
       - name: Move results to ci folder
         run: ./node_modules/.bin/grafana-toolkit plugin:ci-build --finish
+
+#      - name: Sign plugin
+#        run: ./node_modules/.bin/grafana-toolkit plugin:sign
 
       - name: Package distribution
         run: ./node_modules/.bin/grafana-toolkit plugin:ci-package
