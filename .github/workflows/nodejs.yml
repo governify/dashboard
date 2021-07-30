@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     container: 
       image: isagroup/governify-grafana
-      options: -p 3000:3000 -v "$(pwd)"/plugins:/var/lib/grafana/plugins isagroup/governify-grafana
+      options: -p 3000:3000 -v "${PWD}"/plugins:/var/lib/grafana/plugins isagroup/governify-grafana
     needs: [directories]
     strategy:
       matrix:
