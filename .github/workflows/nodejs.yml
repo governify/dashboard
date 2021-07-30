@@ -11,6 +11,7 @@ on:
 
 jobs:
   directories: # Job that list subdirectories
+    name: Get plugins directories
     if: ${{ github.event_name == 'push'}}
     runs-on: ubuntu-latest
     outputs:
@@ -23,6 +24,7 @@ jobs:
           echo "::set-output name=dir::$(ls -d */ | jq -R -s -c 'split("\n")[:-1]')"
 
   prerrequisites:
+    name: Prerrequisites
     if: ${{ github.event_name == 'push'}}
     runs-on: ubuntu-latest
     strategy:
@@ -48,6 +50,8 @@ jobs:
       run: # Defaults for all run steps, not uses
         working-directory: ./plugins/${{ matrix.dir }}
     steps:
+      - uses: actions/checkout@v2
+
       - name: Install dependencies (yarn)
         run: yarn install --frozen-lockfile
  
