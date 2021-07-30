@@ -51,7 +51,7 @@ jobs:
 
       - name: Sign plugin
         run: npx @grafana/toolkit plugin:sign --rootUrls http://localhost:5600,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io
-        working-directory: ./ci/
+        working-directory: ./plugins/${{ matrix.dir }}/ci
 
       - name: Persist to workspace
         uses: actions/upload-artifact@v2
@@ -59,7 +59,7 @@ jobs:
           path: |
             ./plugins/${{ matrix.dir }}ci/jobs/package
             ./plugins/${{ matrix.dir }}ci/packages
-            ./plugins/${{ matrix.dir }}dist
+            ./plugins/${{ matrix.dir }}ci/dist
             ./plugins/${{ matrix.dir }}ci/grafana-test-env
 
   buildProd:
