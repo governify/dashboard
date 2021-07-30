@@ -11,6 +11,7 @@ on:
 
 jobs:
   directories: # Job that list subdirectories
+    if: ${{ github.event_name == 'push'}}
     runs-on: ubuntu-latest
     outputs:
       dir: ${{ steps.set-dirs.outputs.dir }} # generate output name dir by using inner step output
@@ -21,13 +22,24 @@ jobs:
           cd ./plugins
           echo "::set-output name=dir::$(ls -d */ | jq -R -s -c 'split("\n")[:-1]')"
 
+  prerrequisites:
+    if: ${{ github.event_name == 'push'}}
+    runs-on: ubuntu-latest
+    matrix:
+      node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Globally installing yarn
+        run: npm install -g yarn
+
   buildPlugins: # Loops all directories and builds plugins
     if: ${{ github.event_name == 'push'}}
     runs-on: ubuntu-latest
-    container: 
-      image: isagroup/governify-grafana
-      options: -p 3000:3000 -v "${PWD}"/plugins:/var/lib/grafana/plugins isagroup/governify-grafana
-    needs: [directories]
+    needs: [directories, prerrequisites]
     strategy:
       matrix:
         dir: ${{ fromJson(needs.directories.outputs.dir) }}
@@ -35,8 +47,6 @@ jobs:
       run: # Defaults for all run steps, not uses
         working-directory: ./plugins/${{ matrix.dir }}
     steps:
-      - uses: actions/checkout@v2
-
       - name: Install dependencies (yarn)
         run: yarn install --frozen-lockfile
  
