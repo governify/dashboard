@@ -24,7 +24,9 @@ jobs:
   buildPlugins: # Loops all directories and builds plugins
     if: ${{ github.event_name == 'push'}}
     runs-on: ubuntu-latest
-    container: srclosson/grafana-plugin-ci-alpine:latest
+    container: 
+      image: isagroup/governify-grafana
+      options: -p 3000:3000 -v "$(pwd)"/plugins:/var/lib/grafana/plugins isagroup/governify-grafana
     needs: [directories]
     strategy:
       matrix:
@@ -37,7 +39,7 @@ jobs:
 
       - name: Install dependencies (yarn)
         run: yarn install --frozen-lockfile
-
+ 
       - name: Build and test frontend
         run: yarn build 
 
