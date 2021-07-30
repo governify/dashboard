@@ -56,7 +56,7 @@ jobs:
         run: yarn install --frozen-lockfile
  
       - name: Build and test frontend
-        run: yarn build 
+        run: yarn dev && yarn build
 
       - name: Sign plugin
         run: |
@@ -67,10 +67,8 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: |
-            ./plugins/${{ matrix.dir }}jobs/package
-            ./plugins/${{ matrix.dir }}packages
+            ./plugins/${{ matrix.dir }}coverage
             ./plugins/${{ matrix.dir }}dist
-            ./plugins/${{ matrix.dir }}grafana-test-env
 
   buildProd:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push'}}
