@@ -49,6 +49,9 @@ jobs:
       - name: Move results to ci folder
         run: ./node_modules/.bin/grafana-toolkit plugin:ci-build --finish
 
+      - name: Package plugin
+        run: ./node_modules/.bin/grafana-toolkit plugin:ci-package
+
       - name: Sign plugin
         run: npx @grafana/toolkit plugin:sign --rootUrls http://localhost:5600,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io
         working-directory: ./plugins/${{ matrix.dir }}/ci
