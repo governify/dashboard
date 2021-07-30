@@ -49,8 +49,8 @@ jobs:
       - name: Move results to ci folder
         run: ./node_modules/.bin/grafana-toolkit plugin:ci-build --finish
 
-      - name: Package distribution
-        run: ./node_modules/.bin/grafana-toolkit plugin:ci-package
+      - name: Sign plugin
+        run: yarn sign
 
       - name: Persist to workspace
         uses: actions/upload-artifact@v2
