@@ -6,7 +6,7 @@
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
-    "sign": "grafana-toolkit plugin:sign --signatureType private --rootUrls http://localhost:5600,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io",
+    "sign": "grafana-toolkit plugin:sign --rootUrls http://localhost:5600,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io",
     "watch": "grafana-toolkit plugin:dev --watch",
     "format": "prettier --write \"src/*.*\""
   },
