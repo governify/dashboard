@@ -38,14 +38,13 @@ jobs:
       - name: Install dependencies (yarn)
         run: yarn install --frozen-lockfile
 
-      - name: Lint fix
-        run: yarn format
-
       - name: Build and test frontend
         run: yarn build 
 
       - name: Sign plugin
-        run: npx @grafana/toolkit plugin:sign --rootUrls http://localhost:5600,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io
+        run: |
+          export GRAFANA_API_KEY=${{ secrets.GRAFANA_API_KEY }}
+          npx @grafana/toolkit plugin:sign --rootUrls http://localhost:5600,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io
 
       - name: Persist to workspace
         uses: actions/upload-artifact@v2
