@@ -6,8 +6,7 @@
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
-    "watch": "grafana-toolkit plugin:dev --watch",
-    "format": "prettier --write \"src/*.*\""
+    "watch": "grafana-toolkit plugin:dev --watch"
   },
   "repository": "github:grafana/simple-react-panel",
   "author": "Alejandro Guerrero",
@@ -18,7 +17,6 @@
   },
   "devDependencies": {
     "@grafana/data": "7.0.1",
-    "@grafana/toolkit": "7.0.1",
     "@grafana/ui": "7.0.1",
     "@types/d3": "^5.7.2",
     "emotion": "10.0.27"
@@ -27,6 +25,7 @@
     "node": ">=12"
   },
   "dependencies": {
+    "@grafana/toolkit": "7.0.1",
     "react-awesome-popover": "^6.1.1",
     "react-tooltip": "^4.2.9"
   }
