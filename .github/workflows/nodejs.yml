@@ -100,10 +100,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Restore plugin build
-          uses: actions/cache@v2
-          with:
-            key: ${{ runner.os }}-plugins-build
-            path: ./plugins
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-plugins-build
+          path: ./plugins
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -128,10 +128,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Restore plugin build
-          uses: actions/cache@v2
-          with:
-            key: ${{ runner.os }}-plugins-build
-            path: ./plugins
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-plugins-build
+          path: ./plugins
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
