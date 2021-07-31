@@ -60,13 +60,28 @@ jobs:
           export GRAFANA_API_KEY=${{ secrets.GRAFANA_API_KEY }}
           npx @grafana/toolkit plugin:sign --rootUrls http://localhost:5600,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io
 
+      - name: Save plugin build in cache
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-${{ matrix.dir }}-build
+          restore-key: ${{ runner.os }}-plugins-build
+          path: |
+            ./plugins/${{ matrix.dir }}coverage
+            ./plugins/${{ matrix.dir }}dist
+
   generateArtifact:
     if: ${{ github.event_name == 'push'}}
     runs-on: ubuntu-latest
     needs: buildPlugins
     steps:
       - uses: actions/checkout@v2
- 
+
+      - name: Restore plugin build
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-plugins-build
+          path: ./plugins
+      
       - name: Generate artifact
         uses: actions/upload-artifact@v2
         with: 
@@ -81,7 +96,6 @@ jobs:
     needs: generateArtifact
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -105,7 +119,6 @@ jobs:
     needs: generateArtifact
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
