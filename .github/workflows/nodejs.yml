@@ -75,7 +75,7 @@ jobs:
 
   buildProd:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push'}}
-    needs: generateArtifact
+    needs: buildPlugins
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
@@ -105,7 +105,7 @@ jobs:
 
   buildTest:
     if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
-    needs: generateArtifact
+    needs: buildPlugins
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
