@@ -1,5 +1,5 @@
 {
-  "name": "isagroup-scatterplot",
+  "name": "governify-scatterplot",
   "version": "1.0.2",
   "description": "Scatter plot for Grafana - Governify",
   "scripts": {

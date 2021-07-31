@@ -1,7 +1,7 @@
 {
   "type": "panel",
   "name": "scatterplot",
-  "id": "governify-scatterplot-panel",
+  "id": "governify-scatterplot",
   "info": {
     "description": "Scatter plot for Grafana - Governify",
     "author": {
