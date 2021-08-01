@@ -21,7 +21,7 @@ jobs:
       - id: set-dirs
         run: |
           cd ./plugins
-          echo "::set-output name=dir::$(ls -d */ | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=dir::$(ls -d */ | sed 's/.$//' | jq -R -s -c 'split("\n")[:-1]')"
 
   prerrequisites:
     name: Prerrequisites
@@ -69,8 +69,8 @@ jobs:
           name: ${{ matrix.dir }}
           if-no-files-found: error
           path: |
-            ./plugins/${{ matrix.dir}}coverage
-            ./plugins/${{ matrix.dir}}dist
+            ./plugins/${{ matrix.dir}}/coverage
+            ./plugins/${{ matrix.dir}}/dist
 
   buildProd:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push'}}
