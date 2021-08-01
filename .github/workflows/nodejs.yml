@@ -64,27 +64,23 @@ jobs:
           npx @grafana/toolkit plugin:sign --rootUrls http://localhost:5600,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io
 
       - name: Generate artifact
-        if: ${{ matrix.dir == fromJson(needs.directories.outputs.dir)}}
         uses: actions/upload-artifact@v2
         with: 
-          name: Plugins-build
+          name: ${{ matrix.dir }}
           if-no-files-found: error
           path: |
-            ./plugins/**/coverage
-            ./plugins/**/dist
+            ./plugins/${{ matrix.dir}}coverage
+            ./plugins/${{ matrix.dir}}dist
 
   buildProd:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push'}}
     needs: buildPlugins
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
+      - name: Download all artifacts
         uses: actions/download-artifact@v2
         with:
-          name: Plugins-build
-          path: |
-            ./plugins/**/coverage
-            ./plugins/**/dist
+          path: ./plugins
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -111,10 +107,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: Plugins-build
-          path: |
-            ./plugins/**/coverage
-            ./plugins/**/dist
+          path: ./plugins
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
