@@ -6,7 +6,6 @@ COPY defaults.ini conf/defaults.ini
 ADD public public
 # Insert grafana plugins folder
 ADD plugins /var/lib/grafana/plugins
-ADD plugins/scatterplot/dist /var/lib/grafana/plugins/scatterplot/dist
 # Add default datasources
 ADD datasources /etc/grafana/provisioning/datasources
 # Insert Governify Overlay JS to all grafana views

@@ -96,7 +96,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./Dockerfile
           push: true
           tags: governify/dashboard:latest
       - name: Image digest
@@ -126,7 +125,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./Dockerfile
           push: true
           tags: governify/dashboard:develop
       - name: Image digest
