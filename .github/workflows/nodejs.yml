@@ -61,7 +61,7 @@ jobs:
       - name: Sign plugin
         run: |
           export GRAFANA_API_KEY=${{ secrets.GRAFANA_API_KEY }}
-          npx @grafana/toolkit plugin:sign --rootUrls http://localhost:5600,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io
+          npx @grafana/toolkit plugin:sign --rootUrls http://localhost:3000,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io
 
       - name: Generate artifact
         uses: actions/upload-artifact@v2
