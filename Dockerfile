@@ -5,7 +5,7 @@ COPY defaults.ini conf/defaults.ini
 # Insert custom files to public folder. (Dashboard Loader, custom images, etc)
 ADD public public
 # Insert grafana plugins folder
-ADD plugins /var/lib/grafana/plugins
+ADD plugins plugins
 # Add default datasources
 ADD datasources /etc/grafana/provisioning/datasources
 # Insert Governify Overlay JS to all grafana views
