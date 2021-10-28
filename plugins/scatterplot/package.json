@@ -1,5 +1,5 @@
 {
-  "name": "isagroup-scatterplot",
+  "name": "governify-scatterplot",
   "version": "1.0.2",
   "description": "Scatter plot for Grafana - Governify",
   "scripts": {
@@ -15,17 +15,15 @@
     "url": "https://github.com/grafana/simple-react-panel/issues",
     "email": "plugins@grafana.com"
   },
-  "devDependencies": {
-    "@grafana/data": "7.0.1",
-    "@grafana/toolkit": "7.0.1",
-    "@grafana/ui": "7.0.1",
-    "@types/d3": "^5.7.2",
-    "emotion": "10.0.27"
-  },
   "engines": {
     "node": ">=12"
   },
   "dependencies": {
+    "@grafana/toolkit": "7.0.1",
+    "@grafana/data": "7.0.1",
+    "@grafana/ui": "7.0.1",
+    "@types/d3": "^5.7.2",
+    "emotion": "10.0.27",
     "react-awesome-popover": "^6.1.1",
     "react-tooltip": "^4.2.9"
   }

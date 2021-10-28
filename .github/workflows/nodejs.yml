@@ -10,10 +10,78 @@ on:
     branches: [ main, develop ]
 
 jobs:
+  directories: # Job that list subdirectories
+    name: Get plugins directories
+    if: ${{ github.event_name == 'push'}}
+    runs-on: ubuntu-latest
+    outputs:
+      dir: ${{ steps.set-dirs.outputs.dir }} # generate output name dir by using inner step output
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-dirs
+        run: |
+          cd ./plugins
+          echo "::set-output name=dir::$(ls -d */ | sed 's/.$//' | jq -R -s -c 'split("\n")[:-1]')"
+
+  prerrequisites:
+    name: Prerrequisites
+    if: ${{ github.event_name == 'push'}}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Globally installing yarn
+        run: npm install -g yarn
+
+  buildPlugins: # Loops all directories and builds plugins
+    if: ${{ github.event_name == 'push'}}
+    runs-on: ubuntu-latest
+    needs: [directories, prerrequisites]
+    strategy:
+      matrix:
+        dir: ${{ fromJson(needs.directories.outputs.dir) }}
+    defaults:
+      run: # Defaults for all run steps, not uses
+        working-directory: ./plugins/${{ matrix.dir }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies (yarn)
+        run: yarn install --frozen-lockfile
+ 
+      - name: Build and test frontend
+        run: yarn dev && yarn build
+
+      - name: Sign plugin
+        run: |
+          export GRAFANA_API_KEY=${{ secrets.GRAFANA_API_KEY }}
+          npx @grafana/toolkit plugin:sign --rootUrls http://localhost:3000,https://dashboard.galibo.governify.io,https://dashboard.bluejay.governify.io
+
+      - name: Generate artifact
+        uses: actions/upload-artifact@v2
+        with: 
+          name: ${{ matrix.dir }}
+          if-no-files-found: error
+          path: |
+            ./plugins/${{ matrix.dir}}/coverage
+            ./plugins/${{ matrix.dir}}/dist
+
   buildProd:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push'}}
+    needs: buildPlugins
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: ./plugins
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -27,14 +95,22 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          context: ./
           push: true
           tags: governify/dashboard:latest
       - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}  
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
   buildTest:
     if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
+    needs: buildPlugins
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: ./plugins
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -48,6 +124,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          context: ./
           push: true
           tags: governify/dashboard:develop
       - name: Image digest
